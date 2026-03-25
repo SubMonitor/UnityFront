@@ -1,0 +1,41 @@
+# Unity generated folders
+/Library/
+/Temp/
+/Obj/
+/Build/
+/Builds/
+/Logs/
+/UserSettings/
+/MemoryCaptures/
+/Recordings/
+
+# Addressables and asset pipeline cache
+/Assets/AddressableAssetsData/*/*.bin*
+/Assets/StreamingAssets/aa.meta
+/Assets/StreamingAssets/aa/*
+
+# IDE and generated project files
+/.vs/
+/.vscode/
+/.idea/
+/*.csproj
+/*.unityproj
+/*.sln
+/*.suo
+/*.tmp
+/*.user
+/*.userprefs
+/*.pidb
+/*.booproj
+/*.svd
+/*.pdb
+/*.mdb
+/*.opendb
+/*.VC.db
+
+# Rider / Visual Studio / MonoDevelop
+*.DotSettings.user
+
+# OS files
+.DS_Store
+Thumbs.db

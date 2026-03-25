@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>{{{ PRODUCT_NAME }}}</title>
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+  <body>
+    <div id="unity-shell">
+      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} tabindex="-1"></canvas>
+
+      <div id="unity-loading">
+        <div id="unity-loading-card">
+          <div id="unity-title">{{{ PRODUCT_NAME }}}</div>
+          <div id="unity-subtitle">Loading WebGL build...</div>
+          <div id="unity-progress-track">
+            <div id="unity-progress-bar"></div>
+          </div>
+          <div id="unity-progress-text">0%</div>
+        </div>
+      </div>
+
+      <div id="unity-warning"></div>
+    </div>
+
+    <script>
+      const canvas = document.querySelector("#unity-canvas");
+      const loading = document.querySelector("#unity-loading");
+      const progressBar = document.querySelector("#unity-progress-bar");
+      const progressText = document.querySelector("#unity-progress-text");
+      const warningBanner = document.querySelector("#unity-warning");
+
+      function unityShowBanner(message, type) {
+        const banner = document.createElement("div");
+        banner.className = "unity-banner unity-banner-" + (type || "info");
+        banner.textContent = message;
+        warningBanner.appendChild(banner);
+
+        if (type !== "error") {
+          setTimeout(() => {
+            banner.remove();
+            if (!warningBanner.children.length) {
+              warningBanner.style.display = "none";
+            }
+          }, 5000);
+        }
+
+        warningBanner.style.display = warningBanner.children.length ? "flex" : "none";
+      }
+
+      function resizeCanvas() {
+        canvas.style.width = window.innerWidth + "px";
+        canvas.style.height = window.innerHeight + "px";
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      const buildUrl = "Build";
+      const loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
+      const config = {
+        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+#if MEMORY_FILENAME
+        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+        showBanner: unityShowBanner,
+        matchWebGLToCanvasSize: true
+      };
+
+      const script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          const percent = Math.round(progress * 100);
+          progressBar.style.width = percent + "%";
+          progressText.textContent = percent + "%";
+        }).then((unityInstance) => {
+          loading.classList.add("is-hidden");
+          resizeCanvas();
+        }).catch((message) => {
+          unityShowBanner(message, "error");
+        });
+      };
+
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>

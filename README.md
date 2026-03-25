@@ -33,7 +33,6 @@ Unity-клиент проекта Strelka. Репозиторий содержи
 
 Базовый адрес backend находится в `Assets/Scripts/App/Config/ApiConfig.cs`.
 
-- Значение по умолчанию: `http://31.29.180.7:5173`
 - API prefix: `/api/v1`
 - При необходимости адрес можно переопределить вызовом `ApiConfig.OverrideBaseUrl(...)`
 
